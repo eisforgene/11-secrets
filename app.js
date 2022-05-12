@@ -3,7 +3,6 @@ const express = require('express');
 const ejs = require('ejs');
 const PORT = process.env.PORT || 3000
 const mongoose = require('mongoose');
-const md5 = require('md5');
 
 const app = express();
 
@@ -33,38 +32,11 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-    const newUser = new User({ // create a new user using user model by using keywords new User
-        email: req.body.username,
-        password: md5(req.body.password)
-    })
 
-    newUser.save((err) => {
-        if (err) {
-            console.log(err)
-        } else {
-            // res.send('User successfully added.'); // sends a string response
-            res.render('secrets'); // render renders an HTML file / template
-        }
-    });
 });
 
 app.post('/login', (req, res) => {
-    const username = req.body.username;
-    const password = md5(req.body.password);
 
-    User.findOne({ email: username }, (err, foundUser) => {
-        if (err) {
-            console.log(err);
-        } else {
-            if (foundUser) {
-                if (foundUser.password === password) {
-                    res.render('secrets');
-                } else {
-                    console.log('Incorrect Password!');
-                }
-            }
-        }
-    })
 })
 
 app.listen(PORT, () => {
