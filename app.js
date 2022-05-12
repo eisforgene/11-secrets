@@ -10,12 +10,16 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/userDB', {useNewUrlParser: true});
+mongoose.connect('mongodb://localhost:27017/userDB', { useNewUrlParser: true });
 
 var userSchema = new mongoose.Schema({
     email: String,
     password: String
 });
+
+const secret = "Thisisourlittlesecret.";
+userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] }); // add plugin before its used in mongoose model. make sure encryptedFields matches the key from the schema
+
 
 const User = new mongoose.model('User', userSchema);
 
@@ -50,8 +54,8 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    
-    User.findOne({email: username}, (err, foundUser) => {
+
+    User.findOne({ email: username }, (err, foundUser) => {
         if (err) {
             console.log(err);
         } else {
