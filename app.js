@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const ejs = require('ejs');
 const PORT = process.env.PORT || 3000
@@ -17,8 +18,8 @@ var userSchema = new mongoose.Schema({
     password: String
 });
 
-const secret = "Thisisourlittlesecret.";
-userSchema.plugin(encrypt, { secret: secret, encryptedFields: ['password'] }); // add plugin before its used in mongoose model. make sure encryptedFields matches the key from the schema
+
+userSchema.plugin(encrypt, { secret: process.env.SECRET, encryptedFields: ['password'] }); // add plugin before its used in mongoose model. make sure encryptedFields matches the key from the schema
 
 
 const User = new mongoose.model('User', userSchema);
